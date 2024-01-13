@@ -153,7 +153,7 @@ async def download_photo(message: Message, bot: Bot):
     )
 
     # Create InlineKeyboard
-    markup = InlineKeyboardMarkup(row_width=2)
+    markup = InlineKeyboardMarkup()
     button1 = InlineKeyboardButton("Option 1", callback_data='button1')
     button2 = InlineKeyboardButton("Option 2", callback_data='button2')
     markup.add(button1, button2)
