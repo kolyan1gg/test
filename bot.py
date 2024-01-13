@@ -23,6 +23,11 @@ bot = Bot(token=config.bot_token.get_secret_value())
 dp = Dispatcher()
 dp["started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
+# Роутер
+router = Router()
+
+dp.include_router(router)
+
 
 # New code
 from short_model import get_categories
@@ -171,18 +176,17 @@ async def download_photo(message: Message, bot: Bot):
     )
 
 
-@dp.callback_query_handler(lambda c: c.data in ['button1', 'button2'])
+@router.callback_query(lambda c: c.data.startswith('button'))
 async def process_callback_button(callback_query: types.CallbackQuery):
+    await callback_query.bot.answer_callback_query(callback_query.id)
+    _, button_type, new_image = callback_query.data.split('_')
 
-    new_image = new_images[-1]
-
-    if callback_query.data == 'button1':
+    if button_type == 'button1':
         response = str(get_categories(new_image))
     else:
         response = str(get_categories2(new_image))
 
-    await bot.send_message(callback_query.from_user.id, response, parse_mode=types.ParseMode.HTML)
-
+    await callback_query.message.answer(response, parse_mode=types.ParseMode.HTML)
 
 @dp.message(F.sticker)
 async def download_sticker(message: Message, bot: Bot):
