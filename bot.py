@@ -3,7 +3,7 @@ from datetime import datetime
 import logging
 from aiogram import Bot, Dispatcher, types, Router
 from aiogram.filters.command import Command
-from config_reader import config
+#from config_reader import config
 from aiogram import F
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -14,7 +14,7 @@ from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
 # Объект бота
-bot = Bot(token=config.bot_token.get_secret_value()) 
+bot = Bot(token='6845699386:AAF5ezRgPoExZwTjmYxnnGFpeTdUZ1ucMI4') 
 
 # Диспетчер
 dp = Dispatcher()
@@ -135,16 +135,14 @@ async def upload_photo(message: Message):
 async def download_photo(message: Message, bot: Bot):
     await bot.download(
         message.photo[-1],
-        #destination=f"./tmp/{message.photo[-1].file_id}.jpg" # Windows
-        destination=f"/tmp/{message.photo[-1].file_id}.jpg" # Linux
-
+        destination=f"/tmp/{message.photo[-1].file_id}.jpg"
     )
     await message.answer(
         f"Hello, <b>{message.from_user.full_name}</b>, images saved",
         parse_mode=ParseMode.HTML
     )
     
-    new_image = f"./tmp/{message.photo[-1].file_id}.jpg"
+    new_image = f"/tmp/{message.photo[-1].file_id}.jpg"
     new_images.append(new_image)
     print(new_images)
     await message.answer(
