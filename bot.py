@@ -8,7 +8,7 @@ from aiogram import F
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.enums import ParseMode
-from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile, 
+from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
 
 from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InlineKeyboardButton, KeyboardBuilder
