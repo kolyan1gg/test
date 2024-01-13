@@ -12,7 +12,6 @@ from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
 
 from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.dispatcher import FSMContext 
 
 
 # Включаем логирование, чтобы не пропустить важные сообщения
