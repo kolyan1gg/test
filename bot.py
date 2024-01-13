@@ -10,6 +10,10 @@ from aiogram.filters import Command
 from aiogram.enums import ParseMode
 from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
 
+from aiogram import types
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.dispatcher import FSMContext 
+
 
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
@@ -143,6 +147,16 @@ async def download_photo(message: Message, bot: Bot):
         f"Hello, <b>{message.from_user.full_name}</b>, images saved",
         parse_mode=ParseMode.HTML
     )
+
+    # Create InlineKeyboard
+    markup = InlineKeyboardMarkup(row_width=2)
+    button1 = InlineKeyboardButton("Option 1", callback_data='button1')
+    button2 = InlineKeyboardButton("Option 2", callback_data='button2')
+    markup.add(button1, button2)
+
+    # Send a message with the buttons
+    await message.answer("Choose an option:", reply_markup=markup)
+
     
     new_image = f"/tmp/{message.photo[-1].file_id}.jpg" # Linux
     # new_image = f"./tmp/{message.photo[-1].file_id}.jpg" # Windows
@@ -156,6 +170,20 @@ async def download_photo(message: Message, bot: Bot):
         str(get_categories(new_image)),
         parse_mode=ParseMode.HTML
     )
+
+
+@dp.callback_query_handler(lambda c: c.data in ['button1', 'button2'])
+async def process_callback_button(callback_query: types.CallbackQuery):
+
+    new_image = new_images[-1]
+
+    if callback_query.data == 'button1':
+        response = str(get_categories(new_image))
+    else:
+        response = str(get_categories2(new_image))
+
+    await bot.send_message(callback_query.from_user.id, response, parse_mode=types.ParseMode.HTML)
+
 
 @dp.message(F.sticker)
 async def download_sticker(message: Message, bot: Bot):
