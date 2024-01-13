@@ -11,7 +11,7 @@ from aiogram.enums import ParseMode
 from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
 
 from aiogram import types
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InlineKeyboardButton, KeyboardBuilder
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InlineKeyboardButton, InlineKeyboardBuilder
 
 
 # Включаем логирование, чтобы не пропустить важные сообщения
@@ -161,7 +161,7 @@ async def download_photo(message: Message, bot: Bot):
     '''
 
     def genmarkup(data):
-        builder = KeyboardBuilder()
+        builder = InlineKeyboardBuilder()
         for i in data:
             button = InlineKeyboardButton(text=i[1], callback_data=i[2])
             builder.add(button)
