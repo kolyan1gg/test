@@ -135,14 +135,17 @@ async def upload_photo(message: Message):
 async def download_photo(message: Message, bot: Bot):
     await bot.download(
         message.photo[-1],
-        destination=f"/tmp/{message.photo[-1].file_id}.jpg"
+        destination=f"/tmp/{message.photo[-1].file_id}.jpg" # Linux
+        # destination=f"./tmp/{message.photo[-1].file_id}.jpg" # Windows
+
     )
     await message.answer(
         f"Hello, <b>{message.from_user.full_name}</b>, images saved",
         parse_mode=ParseMode.HTML
     )
     
-    new_image = f"/tmp/{message.photo[-1].file_id}.jpg"
+    new_image = f"/tmp/{message.photo[-1].file_id}.jpg" # Linux
+    # new_image = f"./tmp/{message.photo[-1].file_id}.jpg" # Windows
     new_images.append(new_image)
     print(new_images)
     await message.answer(
