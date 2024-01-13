@@ -8,10 +8,10 @@ from aiogram import F
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.enums import ParseMode
-from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
+from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile, 
 
 from aiogram import types
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InlineKeyboardButton, KeyboardBuilder
 
 
 # Включаем логирование, чтобы не пропустить важные сообщения
@@ -152,11 +152,23 @@ async def download_photo(message: Message, bot: Bot):
         parse_mode=ParseMode.HTML
     )
 
+    '''
     # Create InlineKeyboard
     markup = InlineKeyboardMarkup()
     button1 = InlineKeyboardButton("Option 1", callback_data='button1')
     button2 = InlineKeyboardButton("Option 2", callback_data='button2')
     markup.add(button1, button2)
+    '''
+
+    def genmarkup(data):
+        builder = KeyboardBuilder()
+        for i in data:
+            button = InlineKeyboardButton(text=i[1], callback_data=i[2])
+            builder.add(button)
+        return builder.as_markup()
+
+    # Create InlineKeyboard
+    markup = genmarkup(['button1', 'button2', 'button3'])
 
     # Send a message with the buttons
     await message.answer("Choose an option:", reply_markup=markup)
