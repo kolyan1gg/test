@@ -3,7 +3,7 @@ from datetime import datetime
 import logging
 from aiogram import Bot, Dispatcher, types, Router
 from aiogram.filters.command import Command
-from config_reader import config
+#from config_reader import config
 from aiogram import F
 from aiogram.types import Message
 from aiogram.filters import Command
