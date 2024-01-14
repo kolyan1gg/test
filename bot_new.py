@@ -64,54 +64,12 @@ async def cmd_help(message: types.Message):
 async def cmd_example(message: types.Message):
     await message.answer("Вот случайная картинка из моей библиотеки")
     selection = randint(1, 10)
-
-    if selection == 1:
-        photo = "https://disk.yandex.ru/i/vGlZMYGgWp-gZA"
-        await bot.send_photo(message.chat.id, photo)
-
-    if selection == 2:
-        photo = "https://disk.yandex.ru/i/7C1jrAI31CmuDw"
-        await bot.send_photo(message.chat.id, photo)
-
-    if selection == 3:
-        photo = "https://disk.yandex.ru/i/PAv3uuRE4yxxmQ"
-        await bot.send_photo(message.chat.id, photo)
-
-    if selection == 4:
-        photo = "https://disk.yandex.ru/i/Uso5wvKxcNCLWw"
-        await bot.send_photo(message.chat.id, photo)
-
-    if selection == 5:
-        photo = "https://disk.yandex.ru/i/3P92ykGsPfjK8Q"
-        await bot.send_photo(message.chat.id, photo)
-
-    if selection == 6:
-        photo = "https://disk.yandex.ru/i/O6E0ob1AAwfj-A"
-        await bot.send_photo(message.chat.id, photo)
-
-    if selection == 7:
-        photo = "https://disk.yandex.ru/i/YN_c5h2jWn2aPQ"
-        await bot.send_photo(message.chat.id, photo)
-
-    if selection == 8:
-        photo = "https://disk.yandex.ru/i/vMQcSSp1CDHPHw"
-        await bot.send_photo(message.chat.id, photo)
-
-    if selection == 9:
-        photo = "https://disk.yandex.ru/i/UwkPoqqEByiG-w"
-        await bot.send_photo(message.chat.id, photo)
-
-    if selection == 10:
-        photo = "https://disk.yandex.ru/i/r5YGjo8gdNZBOg"
-        await bot.send_photo(message.chat.id, photo)
+    file_name = f"./sample/{selection}.jpg" if os.name == 'nt' else f"/sample/{selection}.jpg"
     
-    
-    file_name = f"./tmp/{'test_image'}.jpg" if os.name == 'nt' else f"/tmp/{'test_image'}.jpg"
+    image_to_send = FSInputFile(file_name)
+    await bot.send_photo(message.chat.id, image_to_send)
 
-    # Download image to folder
-    urllib.request.urlretrieve(photo, file_name)
     new_images.append(file_name)
-
     await message.answer("Я могу определить, кто на ней изображён. Выберите модель: -", reply_markup=model_keyboard())
 
 
