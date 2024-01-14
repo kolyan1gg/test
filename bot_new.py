@@ -106,12 +106,12 @@ async def cmd_example(message: types.Message):
         await bot.send_photo(message.chat.id, photo)
     
     
-    file_name = f"test_image.jpg"
+    file_name = f"./tmp/{'test_image'}.jpg" if os.name == 'nt' else f"/tmp/{'test_image'}.jpg"
 
     # Download image to folder
     urllib.request.urlretrieve(photo, file_name)
     new_images.append(file_name)
-    
+
     await message.answer("Я могу определить, кто на ней изображён. Выберите модель: -", reply_markup=model_keyboard())
 
 
