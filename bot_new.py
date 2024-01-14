@@ -65,6 +65,7 @@ async def cmd_example(message: types.Message):
     await message.answer("Вот случайная картинка из моей библиотеки")
     selection = randint(1, 10)
     file_name = f"./sample/{selection}.jpg" if os.name == 'nt' else f"/sample/{selection}.jpg"
+    print(file_name)
     
     image_to_send = FSInputFile(file_name)
     await bot.send_photo(message.chat.id, image_to_send)
