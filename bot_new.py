@@ -15,6 +15,8 @@ from aiogram.filters import Command, CommandObject
 from aiogram.enums import ParseMode
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+import urllib.request
+
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
 # Объект бота
@@ -103,7 +105,13 @@ async def cmd_example(message: types.Message):
         photo = "https://disk.yandex.ru/i/r5YGjo8gdNZBOg"
         await bot.send_photo(message.chat.id, photo)
     
-    new_images.append(photo)
+    
+    file_name = f"test_image.jpg"
+
+    # Download image to folder
+    urllib.request.urlretrieve(photo, file_name)
+    new_images.append(file_name)
+    
     await message.answer("Я могу определить, кто на ней изображён. Выберите модель: -", reply_markup=model_keyboard())
 
 
