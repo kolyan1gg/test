@@ -100,6 +100,8 @@ async def cmd_example(message: types.Message):
     if selection == 10:
         photo = "https://disk.yandex.ru/i/r5YGjo8gdNZBOg"
         await bot.send_photo(message.chat.id, photo)
+    
+    await message.answer("Я могу определить, кто на ней изображён. Выберите модель: -", reply_markup=model_keyboard())
 
 
 @dp.message(Command("info"))
