@@ -6,9 +6,10 @@ from aiogram.filters.command import Command
 from config_reader import config
 from aiogram import F
 from aiogram.types import Message
-from aiogram.filters import Command
+from aiogram.filters import Command, CommandObject
 from aiogram.enums import ParseMode
 from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
+
 
 from aiogram import types
 import os
@@ -31,6 +32,7 @@ dp["started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
 # New code
 from short_model import get_categories_rn, get_categories_vit
+from gimages_dl import download_gimages, get_random_gimage
 new_images = []
 
 from aiogram.filters import Command
@@ -225,6 +227,50 @@ async def callbacks_num(callback: types.CallbackQuery):
                 "Error",
                 parse_mode=ParseMode.HTML
             )
+
+
+
+@dp.message(Command('random_image'))
+async def analyze_random_image(message: Message, command: CommandObject):
+    # Сюда будем помещать file_id отправленных файлов, чтобы потом ими воспользоваться
+    file_ids = []
+
+    if command.args is None:
+        await message.answer(
+            "Нет аргументов, выбираем случайную картинку"
+        )
+        
+        download_gimages('жираф')
+    else:
+        category = command.args
+        download_gimages(category)
+
+
+    random_image = get_random_gimage()
+    new_images.append(random_image)
+    image_to_send = FSInputFile(random_image)
+    print(random_image)
+
+
+    if command.args is None:
+        await message.answer(f"Вот случайная картинка по одной из категорий животных")
+    else:
+        await message.answer(f"Вот случайная картинка по вашему запросу - {category}")
+
+    
+    await bot.send_photo(message.chat.id, image_to_send)
+    await message.answer("Выберите модель: -", reply_markup=model_keyboard())
+
+
+    '''
+    # Отправка файла из файловой системы
+    result = await message.answer_photo(
+        random_image,
+        caption="Случайное изображение из Google Image Search"
+    )
+    file_ids.append(result.photo[-1].file_id)
+    '''
+
 
 
 '''
