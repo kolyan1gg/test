@@ -191,6 +191,9 @@ def save_result_as_chart(result):
     # Plot the bar chart
     ax = df.plot(kind='bar', x='Category ID', y='Probability', color='red')
 
+    # Manually set the y-axis range
+    ax.set_ylim([0, 1.1])
+
     # Add number labels to each bar
     for p in ax.patches:
         ax.annotate(f'{p.get_height():.2f}',  # 2 decimals
@@ -198,7 +201,7 @@ def save_result_as_chart(result):
                     ha='center', va='center',
                     xytext=(0, 9),
                     textcoords='offset points', 
-                    fontsize=12)
+                    fontsize=14)
 
     # Set title and adjust the font size
     plt.title('Top categories', fontsize=20)  # Set title and font size for the title

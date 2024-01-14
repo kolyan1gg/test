@@ -45,7 +45,7 @@ new_images = []
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     await message.answer(f'Привет! Я определяю зверушку по фотографии. Отправь мне фотографию, и я скажу кто на ней изображеню. \nНапиши /help, и я покажу пример, как я работаю')
-    await message.answer(f'Для справки список всех команд: \n/help \n/info \n/example \n/help \n/g')
+    await message.answer(f'Для справки список всех команд: \n/help \n/info \n/example \n/help \n/g [запрос] \n/g')
     await message.answer(f'Если лень искать картинку, можешь написать /g [запрос], я найду 20 картинок по твоему запросу в Google Images, выберу случайную и определю её класс')
     await message.answer(f'Если совсем влом, напиши просто /g, я загуглю картинку случайного животного и потом определю, кто это')
     await message.answer(f'Или напиши /example, и я достану случайную картинку из своей библиотеки')
@@ -183,7 +183,7 @@ async def callbacks_num(callback: types.CallbackQuery):
             image_to_send = FSInputFile(save_result_as_chart(full_answer))
 
             await callback.message.edit_text(
-                f"Я думаю что это {str(short_answer)}",
+                f"Я думаю, что это {str(short_answer)}",
                 parse_mode=ParseMode.HTML
             )
             await callback.message.answer(
