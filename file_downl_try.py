@@ -20,7 +20,7 @@ def get_rn_file():
     import wget
 
     # Define the file path and the download URL
-    file_path = 'rn50_state_dict.pth'  # Replace with your file path
+    file_path = 'resnet50_state_dict.pth'  # Replace with your file path
     download_url = 'https://github.com/kolyan1gg/test/blob/main/resnet50_state_dict.pth'  # Replace with your file URL
 
     # Check if the file exists
