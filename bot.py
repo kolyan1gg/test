@@ -11,7 +11,11 @@ from aiogram.enums import ParseMode
 from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
 
 from aiogram import types
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InlineKeyboardButton, InlineKeyboardBuilder
+import os
+
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import InlineKeyboardButton
+
 
 
 # Включаем логирование, чтобы не пропустить важные сообщения
@@ -23,20 +27,17 @@ bot = Bot(token=config.bot_token.get_secret_value())
 dp = Dispatcher()
 dp["started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-# Роутер
-router = Router()
-
-dp.include_router(router)
 
 
 # New code
-from short_model import get_categories
+from short_model import get_categories_rn, get_categories_vit
 new_images = []
 
 from aiogram.filters import Command
 from aiogram.types import FSInputFile, Message
 from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
+from random import randint
 
 @dp.message(Command("special_buttons"))
 async def cmd_special_buttons(message: types.Message):
@@ -138,55 +139,187 @@ async def upload_photo(message: Message):
     file_ids.append(result.photo[-1].file_id)
     await message.answer("Отправленные файлы:\n"+"\n".join(file_ids))
 
+@dp.message(Command("random"))
+async def cmd_random(message: types.Message):
+    builder = InlineKeyboardBuilder()
+    builder.add(types.InlineKeyboardButton(
+        text="Нажми меня",
+        callback_data="random_value")
+    )
+    await message.answer(
+        "Нажмите на кнопку, чтобы бот отправил число от 1 до 10",
+        reply_markup=builder.as_markup()
+    )
+
+@dp.callback_query(F.data == "random_value")
+async def send_random_value(callback: types.CallbackQuery):
+    await callback.message.answer(str(randint(1, 10)))
+
+'''
+# Здесь хранятся пользовательские данные.
+# Т.к. это словарь в памяти, то при перезапуске он очистится
+user_data = {}
+
+def get_keyboard():
+    buttons = [
+        [
+            types.InlineKeyboardButton(text="-1", callback_data="num_decr"),
+            types.InlineKeyboardButton(text="+1", callback_data="num_incr")
+        ],
+        [types.InlineKeyboardButton(text="Подтвердить", callback_data="num_finish")]
+    ]
+    keyboard = types.InlineKeyboardMarkup(inline_keyboard=buttons)
+    return keyboard
+
+async def update_num_text(message: types.Message, new_value: int):
+    await message.edit_text(
+        f"Укажите число: {new_value}",
+        reply_markup=get_keyboard()
+    )
+
+@dp.message(Command("numbers"))
+async def cmd_numbers(message: types.Message):
+    user_data[message.from_user.id] = 0
+    await message.answer("Укажите число: 0", reply_markup=get_keyboard())
+
+@dp.callback_query(F.data.startswith("num_"))
+async def callbacks_num(callback: types.CallbackQuery):
+    user_value = user_data.get(callback.from_user.id, 0)
+    action = callback.data.split("_")[1]
+
+    if action == "incr":
+        user_data[callback.from_user.id] = user_value+1
+        await update_num_text(callback.message, user_value+1)
+    elif action == "decr":
+        user_data[callback.from_user.id] = user_value-1
+        await update_num_text(callback.message, user_value-1)
+    elif action == "finish":
+        await callback.message.edit_text(f"Итого: {user_value}")
+
+    await callback.answer()
+'''
+
+'''
+# Choose model
+    
+# Здесь хранятся пользовательские данные.
+# Т.к. это словарь в памяти, то при перезапуске он очистится
+user_data = {}
+
+def model_keyboard():
+    buttons = [
+        [
+            types.InlineKeyboardButton(text="RESNET", callback_data="model_RESNET"),
+            types.InlineKeyboardButton(text="VIT", callback_data="model_VIT")
+        ],
+        [types.InlineKeyboardButton(text="Подтвердить", callback_data="model_SELECT")]
+    ]
+    keyboard = types.InlineKeyboardMarkup(inline_keyboard=buttons)
+    return keyboard
+
+async def update_num_text(message: types.Message, new_value: int):
+    await message.edit_text(
+        f"Выберите модель: {new_value}",
+        reply_markup=model_keyboard()
+    )
+
+@dp.message(Command("select_model"))
+async def model_select(message: types.Message):
+    user_data[message.from_user.id] = 0
+    await message.answer("Выберите модель: -", reply_markup=model_keyboard())
+
+@dp.callback_query(F.data.startswith("model_"))
+async def callbacks_num(callback: types.CallbackQuery):
+    user_value = user_data.get(callback.from_user.id, 0)
+    action = callback.data.split("_")[1]
+
+    if action == "RESNET":
+        user_data[callback.from_user.id] = action
+        user_value = action
+        await update_num_text(callback.message, user_value)
+    elif action == "VIT":
+        user_data[callback.from_user.id] = action
+        user_value = action
+        await update_num_text(callback.message, user_value)
+    elif action == "SELECT":
+        await callback.message.edit_text(f"Выбрана модель: {user_value}")
+
+    await callback.answer()
+'''
+
+def model_keyboard():
+    buttons = [
+        [
+            types.InlineKeyboardButton(text="RESNET", callback_data="model_RESNET"),
+            types.InlineKeyboardButton(text="VIT", callback_data="model_VIT")
+        ],
+        [types.InlineKeyboardButton(text="Подтвердить", callback_data="model_SELECT")]
+    ]
+    keyboard = types.InlineKeyboardMarkup(inline_keyboard=buttons)
+    return keyboard
+
+
+user_data = {}
+new_images = []
+
+async def update_num_text(message: types.Message, new_value: int):
+    await message.edit_text(
+        f"Выберите модель: {new_value}",
+        reply_markup=model_keyboard()
+    )
 
 @dp.message(F.photo)
-async def download_photo(message: Message, bot: Bot):
+async def download_photo(message: Message,  bot: Bot):
     await bot.download(
         message.photo[-1],
-        destination=f"/tmp/{message.photo[-1].file_id}.jpg" # Linux
-        # destination=f"./tmp/{message.photo[-1].file_id}.jpg" # Windows
-
+        destination = f"./tmp/{message.photo[-1].file_id}.jpg" if os.name == 'nt' else f"/tmp/{message.photo[-1].file_id}.jpg"
     )
+
+    new_image = f"./tmp/{message.photo[-1].file_id}.jpg" if os.name == 'nt' else f"/tmp/{message.photo[-1].file_id}.jpg"
+    new_images.append(new_image)
+    print(new_images)
+
+    user_data[message.from_user.id] = 0
     await message.answer(
         f"Hello, <b>{message.from_user.full_name}</b>, images saved",
         parse_mode=ParseMode.HTML
     )
+    await message.answer("Выберите модель: -", reply_markup=model_keyboard())
 
-    '''
-    # Create InlineKeyboard
-    markup = InlineKeyboardMarkup()
-    button1 = InlineKeyboardButton("Option 1", callback_data='button1')
-    button2 = InlineKeyboardButton("Option 2", callback_data='button2')
-    markup.add(button1, button2)
-    '''
+@dp.callback_query(F.data.startswith("model_"))
+async def callbacks_num(callback: types.CallbackQuery):
+    user_value = user_data.get(callback.from_user.id, 0)
+    action = callback.data.split("_")[1]
 
-    def genmarkup(data):
-        builder = InlineKeyboardBuilder()
-        for i in data:
-            button = InlineKeyboardButton(text=i[1], callback_data=i[2])
-            builder.add(button)
-        return builder.as_markup()
+    if action == "RESNET":
+        user_data[callback.from_user.id] = action
+        user_value = action
+        await update_num_text(callback.message, user_value)
+    elif action == "VIT":
+        user_data[callback.from_user.id] = action
+        user_value = action
+        await update_num_text(callback.message, user_value)
+    elif action == "SELECT":
+        await callback.message.edit_text(f"Выбрана модель: {user_value}")
+        
+        if user_value == "RESNET":
+            await callback.message.edit_text(
+                str(get_categories_rn(new_images[-1])),
+                parse_mode=ParseMode.HTML
+            )
+        elif user_value == "VIT":
+            await callback.message.edit_text(
+                str(get_categories_vit(new_images[-1])),
+                parse_mode=ParseMode.HTML
+            )
+        else:
+            await callback.message.edit_text(
+                "Error",
+                parse_mode=ParseMode.HTML
+            )
 
-    # Create InlineKeyboard
-    markup = genmarkup(['button1', 'button2', 'button3'])
 
-    # Send a message with the buttons
-    await message.answer("Choose an option:", reply_markup=markup)
-
-    
-    new_image = f"/tmp/{message.photo[-1].file_id}.jpg" # Linux
-    # new_image = f"./tmp/{message.photo[-1].file_id}.jpg" # Windows
-    new_images.append(new_image)
-    print(new_images)
-    await message.answer(
-        f"New image saved: <b> {new_image}</b>",
-        parse_mode=ParseMode.HTML
-    )
-    await message.answer(
-        str(get_categories(new_image)),
-        parse_mode=ParseMode.HTML
-    )
-
+'''
 
 @router.callback_query(lambda c: c.data.startswith('button'))
 async def process_callback_button(callback_query: types.CallbackQuery):
@@ -258,7 +391,7 @@ async def cmd_add_to_list(message: types.Message, mylist: list[int]):
 async def cmd_show_list(message: types.Message, mylist: list[int]):
     await message.answer(f"Ваш список: {mylist}")
 
-
+'''
 @dp.message(Command("info"))
 async def cmd_info(message: types.Message, started_at: str):
     await message.answer(f"Бот запущен {started_at}")
