@@ -120,7 +120,7 @@ async def download_photo(message: Message,  bot: Bot):
 
     user_data[message.from_user.id] = 0
     await message.answer(
-        f"Сохраняю вашу картинку и начинаю думать кто на ней...",
+        f"Сохраняю вашу картинку и начинаю думать, кто на ней...",
         parse_mode=ParseMode.HTML
     )
     # активация инлайн кнопок
@@ -142,7 +142,7 @@ async def callbacks_num(callback: types.CallbackQuery):
         user_value = action
         await update_num_text(callback.message, user_value)
     elif action == "SELECT":
-        await callback.message.edit_text(f"Выбрана модель: {user_value}, начинаю думать кто на ней изображен...")
+        await callback.message.edit_text(f"Выбрана модель: {user_value}, начинаю думать, кто на ней изображен...")
         
         # отправка картинки в нейросеть, получение ответа и передача пользователю
         if user_value == "RESNET":
