@@ -68,7 +68,7 @@ async def cmd_example(message: types.Message):
     print(file_name)
     
     image_to_send = FSInputFile(file_name)
-    await bot.send_photo(message.chat.id, image_to_send)
+    #await bot.send_photo(message.chat.id, image_to_send)
 
     new_images.append(file_name)
     await message.answer("Я могу определить, кто на ней изображён. Выберите модель: -", reply_markup=model_keyboard())
