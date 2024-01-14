@@ -144,7 +144,9 @@ def get_categories_rn(new_image_path):
 
     # Move model to GPU
     resnet = resnet.to('cuda' if torch.cuda.is_available() else 'cpu')
-    #resnet.eval()
+    
+    # Set model to evaluation mode
+    resnet.eval()
 
     import torch
     import torch.nn.functional as F
@@ -177,3 +179,5 @@ def get_categories_rn(new_image_path):
     print(df_string)
 
     return df_string
+
+#get_categories_rn('gg')
