@@ -191,6 +191,15 @@ def save_result_as_chart(result):
     # Plot the bar chart
     ax = df.plot(kind='bar', x='Category ID', y='Probability', color='red')
 
+    # Add number labels to each bar
+    for p in ax.patches:
+        ax.annotate(f'{p.get_height():.2f}',  # 2 decimals
+                    (p.get_x() + p.get_width() / 2., p.get_height()),
+                    ha='center', va='center',
+                    xytext=(0, 9),
+                    textcoords='offset points', 
+                    fontsize=12)
+
     # Set title and adjust the font size
     plt.title('Top categories', fontsize=20)  # Set title and font size for the title
 
@@ -198,6 +207,9 @@ def save_result_as_chart(result):
     plt.xlabel('Category ID', fontsize=14)
     plt.ylabel('Probability', fontsize=14)
     ax.tick_params(axis='both', which='major', labelsize=18)
+
+    # Adjust plot margins
+    #plt.subplots_adjust(left=0.1, right=0.9, top=0.85, bottom=0.1)
 
     filename = 'result.png'
     plt.savefig(filename, bbox_inches='tight', dpi=dpi)

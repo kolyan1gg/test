@@ -44,13 +44,16 @@ new_images = []
 # Хэндлер на команду /start
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
-    await message.answer(f'Привет! Я определяю зверушку по фотографии. Отправь мне фотографию и я скажу кто на ней изображеню. \nНапиши /help и я покажу пример как я работаю')
-    await message.answer(f'Для справки список всех команд: \n/help \n/info \n/example')
+    await message.answer(f'Привет! Я определяю зверушку по фотографии. Отправь мне фотографию, и я скажу кто на ней изображеню. \nНапиши /help, и я покажу пример, как я работаю')
+    await message.answer(f'Для справки список всех команд: \n/help \n/info \n/example \n/help \n/g')
+    await message.answer(f'Если лень искать картинку, можешь написать /g [запрос], я найду 20 картинок по твоему запросу в Google Images, выберу случайную и определю её класс')
+    await message.answer(f'Если совсем влом, напиши просто /g, я загуглю картинку случайного животного и потом определю, кто это')
+    await message.answer(f'Или напиши /example, и я достану случайную картинку из своей библиотеки')
 
 # Хэндлер на команду /help
 @dp.message(Command("help"))
 async def cmd_help(message: types.Message):
-    await message.answer("Вот пример того как cо мной взаимодейстовавать...")
+    await message.answer("Вот пример того, как cо мной взаимодейстовавать...")
     # тут должен быть скриншот уже готового бота (последний шаг)
     photo_1 = "https://disk.yandex.ru/i/0nJvrpXn1mjSyg"
     photo_2 = "https://disk.yandex.ru/i/QvJuz5j3Kimg9g"
@@ -149,7 +152,7 @@ async def callbacks_num(callback: types.CallbackQuery):
             image_to_send = FSInputFile(save_result_as_chart(full_answer))
 
             await callback.message.edit_text(
-                f"Я думаю что это {str(short_answer)}",
+                f"Я думаю, что это {str(short_answer)}",
                 parse_mode=ParseMode.HTML
             )
             await callback.message.answer(
@@ -220,7 +223,7 @@ async def false_answer(callback: types.CallbackQuery):
     await callback.message.answer("Спасибо за фидбек. Меня обновят, и я стану умнее.")
 
 
-@dp.message(Command('random_image'))
+@dp.message(Command('g'))
 async def analyze_random_image(message: Message, command: CommandObject):
     # Сюда будем помещать file_id отправленных файлов, чтобы потом ими воспользоваться
     file_ids = []
