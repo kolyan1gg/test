@@ -1,6 +1,8 @@
 #pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 import json
 from file_downl_try import get_vit_file, get_rn_file
+import matplotlib.pyplot as plt
+import pandas as pd
 
 def get_categories_vit(new_image_path):
 
@@ -93,7 +95,7 @@ def get_categories_vit(new_image_path):
     df_string = df.to_string(index=False)
     print(df_string)
 
-    return df_string
+    return df
 
 def get_categories_rn(new_image_path):
     import torch
@@ -178,6 +180,26 @@ def get_categories_rn(new_image_path):
     df_string = df.to_string(index=False)
     print(df_string)
 
-    return df_string
+    return df
 
-#get_categories_rn('gg')
+def save_result_as_chart(result):   
+    df = pd.DataFrame(result)
+    dpi = 60
+    
+    plt.figure(figsize=(1.5, 1.5))
+
+    # Plot the bar chart
+    ax = df.plot(kind='bar', x='Category ID', y='Probability', color='red')
+
+    # Set title and adjust the font size
+    plt.title('Top categories', fontsize=20)  # Set title and font size for the title
+
+    # Adjust font size for labels and ticks
+    plt.xlabel('Category ID', fontsize=14)
+    plt.ylabel('Probability', fontsize=14)
+    ax.tick_params(axis='both', which='major', labelsize=18)
+
+    filename = 'result.png'
+    plt.savefig(filename, bbox_inches='tight', dpi=dpi)
+
+    return filename
