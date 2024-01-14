@@ -37,6 +37,8 @@ animal_list = ['Bear', 'Brown bear', 'Bull', 'Camel', 'Canary', 'Cat', 'Caterpil
     'Swan', 'Tick', 'Tiger', 'Tortoise', 'Turkey', 'Turtle', 'Whale', 'Woodpecker', 
     'Worm', 'Zebra']
 
+new_images = []
+
 # Хэндлер на команду /start
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
@@ -101,6 +103,7 @@ async def cmd_example(message: types.Message):
         photo = "https://disk.yandex.ru/i/r5YGjo8gdNZBOg"
         await bot.send_photo(message.chat.id, photo)
     
+    new_images.append(photo)
     await message.answer("Я могу определить, кто на ней изображён. Выберите модель: -", reply_markup=model_keyboard())
 
 
@@ -125,7 +128,7 @@ def model_keyboard():
     return keyboard
 
 user_data = {}
-new_images = []
+
 
 # кнопка для подтверждения выбора модели пользователем
 async def update_num_text(message: types.Message, new_value: int):
