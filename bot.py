@@ -155,98 +155,6 @@ async def cmd_random(message: types.Message):
 async def send_random_value(callback: types.CallbackQuery):
     await callback.message.answer(str(randint(1, 10)))
 
-'''
-# Здесь хранятся пользовательские данные.
-# Т.к. это словарь в памяти, то при перезапуске он очистится
-user_data = {}
-
-def get_keyboard():
-    buttons = [
-        [
-            types.InlineKeyboardButton(text="-1", callback_data="num_decr"),
-            types.InlineKeyboardButton(text="+1", callback_data="num_incr")
-        ],
-        [types.InlineKeyboardButton(text="Подтвердить", callback_data="num_finish")]
-    ]
-    keyboard = types.InlineKeyboardMarkup(inline_keyboard=buttons)
-    return keyboard
-
-async def update_num_text(message: types.Message, new_value: int):
-    await message.edit_text(
-        f"Укажите число: {new_value}",
-        reply_markup=get_keyboard()
-    )
-
-@dp.message(Command("numbers"))
-async def cmd_numbers(message: types.Message):
-    user_data[message.from_user.id] = 0
-    await message.answer("Укажите число: 0", reply_markup=get_keyboard())
-
-@dp.callback_query(F.data.startswith("num_"))
-async def callbacks_num(callback: types.CallbackQuery):
-    user_value = user_data.get(callback.from_user.id, 0)
-    action = callback.data.split("_")[1]
-
-    if action == "incr":
-        user_data[callback.from_user.id] = user_value+1
-        await update_num_text(callback.message, user_value+1)
-    elif action == "decr":
-        user_data[callback.from_user.id] = user_value-1
-        await update_num_text(callback.message, user_value-1)
-    elif action == "finish":
-        await callback.message.edit_text(f"Итого: {user_value}")
-
-    await callback.answer()
-'''
-
-'''
-# Choose model
-    
-# Здесь хранятся пользовательские данные.
-# Т.к. это словарь в памяти, то при перезапуске он очистится
-user_data = {}
-
-def model_keyboard():
-    buttons = [
-        [
-            types.InlineKeyboardButton(text="RESNET", callback_data="model_RESNET"),
-            types.InlineKeyboardButton(text="VIT", callback_data="model_VIT")
-        ],
-        [types.InlineKeyboardButton(text="Подтвердить", callback_data="model_SELECT")]
-    ]
-    keyboard = types.InlineKeyboardMarkup(inline_keyboard=buttons)
-    return keyboard
-
-async def update_num_text(message: types.Message, new_value: int):
-    await message.edit_text(
-        f"Выберите модель: {new_value}",
-        reply_markup=model_keyboard()
-    )
-
-@dp.message(Command("select_model"))
-async def model_select(message: types.Message):
-    user_data[message.from_user.id] = 0
-    await message.answer("Выберите модель: -", reply_markup=model_keyboard())
-
-@dp.callback_query(F.data.startswith("model_"))
-async def callbacks_num(callback: types.CallbackQuery):
-    user_value = user_data.get(callback.from_user.id, 0)
-    action = callback.data.split("_")[1]
-
-    if action == "RESNET":
-        user_data[callback.from_user.id] = action
-        user_value = action
-        await update_num_text(callback.message, user_value)
-    elif action == "VIT":
-        user_data[callback.from_user.id] = action
-        user_value = action
-        await update_num_text(callback.message, user_value)
-    elif action == "SELECT":
-        await callback.message.edit_text(f"Выбрана модель: {user_value}")
-
-    await callback.answer()
-'''
-
 def model_keyboard():
     buttons = [
         [
@@ -320,19 +228,6 @@ async def callbacks_num(callback: types.CallbackQuery):
 
 
 '''
-
-@router.callback_query(lambda c: c.data.startswith('button'))
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await callback_query.bot.answer_callback_query(callback_query.id)
-    _, button_type, new_image = callback_query.data.split('_')
-
-    if button_type == 'button1':
-        response = str(get_categories(new_image))
-    else:
-        response = str(get_categories2(new_image))
-
-    await callback_query.message.answer(response, parse_mode=types.ParseMode.HTML)
-
 @dp.message(F.sticker)
 async def download_sticker(message: Message, bot: Bot):
     await bot.download(
@@ -361,10 +256,7 @@ async def any_message(message: Message):
     )
 
 
-# Хэндлер на команду /start
-@dp.message(Command("start"))
-async def cmd_start(message: types.Message):
-    await message.answer("Hello!")
+
 
 # Хэндлер на команду /test1
 @dp.message(Command("test1"))
@@ -392,6 +284,12 @@ async def cmd_show_list(message: types.Message, mylist: list[int]):
     await message.answer(f"Ваш список: {mylist}")
 
 '''
+# Хэндлер на команду /start
+@dp.message(Command("start"))
+async def cmd_start(message: types.Message):
+    await message.answer("Hello!")
+
+
 @dp.message(Command("info"))
 async def cmd_info(message: types.Message, started_at: str):
     await message.answer(f"Бот запущен {started_at}")
