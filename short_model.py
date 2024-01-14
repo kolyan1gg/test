@@ -1,6 +1,6 @@
 #pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 import json
-from file_downl_try import get_vit_file
+from file_downl_try import get_vit_file, get_rn_file
 
 def get_categories_vit(new_image_path):
 
@@ -138,6 +138,7 @@ def get_categories_rn(new_image_path):
     resnet.fc = nn.Linear(resnet.fc.in_features, num_classes, device = device)
 
     # Then load the state dictionary
+    get_rn_file() # download file if not exists
     resnet.load_state_dict(torch.load('resnet50_state_dict.pth', map_location=device))
 
 

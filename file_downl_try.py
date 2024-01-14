@@ -13,3 +13,19 @@ def get_vit_file():
         wget.download(download_url, file_path)
     else:
         print(f"File already exists at {file_path}")
+
+def get_rn_file():
+
+    import os
+    import wget
+
+    # Define the file path and the download URL
+    file_path = 'rn50_state_dict.pth'  # Replace with your file path
+    download_url = 'https://github.com/kolyan1gg/test/blob/main/resnet50_state_dict.pth'  # Replace with your file URL
+
+    # Check if the file exists
+    if not os.path.exists(file_path):
+        print(f"File not found. Downloading from {download_url}")
+        wget.download(download_url, file_path)
+    else:
+        print(f"File already exists at {file_path}")
