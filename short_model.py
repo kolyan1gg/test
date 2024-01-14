@@ -104,12 +104,12 @@ def get_categories_rn(new_image_path):
     import torch.nn as nn
 
     # Load image
-    #image_path = new_image_path # test image path
-    #image = Image.open(image_path)
+    image_path = new_image_path # test image path
+    image = Image.open(image_path)
 
     # Load image
-    image_path = 'extra images test/horse.jpg' # test image path
-    image = Image.open(image_path)  
+    #image_path = 'extra images test/horse.jpg' # test image path
+    #image = Image.open(image_path)  
 
 
     # Transform the image
@@ -176,5 +176,3 @@ def get_categories_rn(new_image_path):
     print(df_string)
 
     return df_string
-
-get_categories_rn('gg')
